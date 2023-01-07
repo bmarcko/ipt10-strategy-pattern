@@ -6,14 +6,14 @@ class Item
 {
 	protected $code;
 	protected $name;
-	protected $description;
+	//protected $description;
 	protected $price;
 
-	public function __construct($code, $name, $description, $price)
+	public function __construct($code, $name, $price)
 	{
 		$this->code = $code;
 		$this->name = $name;
-		$this->description = $description;
+		//$this->description = $description;
 		$this->price = $price;
 	}
 
@@ -27,10 +27,10 @@ class Item
 		return $this->name;
 	}
 
-	public function getDescription()
+	/* public function getDescription()
 	{
 		return $this->description;
-	}
+	} */
 
 	public function getPrice()
 	{

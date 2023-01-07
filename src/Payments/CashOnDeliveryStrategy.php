@@ -7,18 +7,22 @@ use App\Payments\PaymentStrategy;
 class CashOnDeliveryStrategy implements PaymentStrategy
 {
 	protected $name;
+    protected $email;
 	protected $address;
-	protected $city;
-	protected $postal_code;
-	protected $country;
+	//protected $city;
+	//protected $postal_code;
+	//protected $country;
 
-	public function __construct($name, $address, $city, $postal_code, $country)
+	public function __construct($customer)
 	{
-		$this->name = $name;
+		$this->name = $customer->getName();
+		$this->address = $customer->getAddress();
+		$this->email = $customer->getEmail();
+        /* $this->name = $name;
 		$this->address = $address;
 		$this->city = $city;
 		$this->postal_code = $postal_code;
-		$this->country = $country;
+		$this->country = $country; */
 	}
 
 	public function pay($amount)
@@ -26,6 +30,7 @@ class CashOnDeliveryStrategy implements PaymentStrategy
 		echo "Payment for the amount {$amount} would be paid on delivery\n";
 		echo "C.O.D. Details\n";
 		echo "Payee: {$this->name} \n";
-		echo "Address: {$this->address}, {$this->city}, {$this->postal_code}, {$this->country} \n";
+		echo "Email: {$this->email} \n";
+		echo "Address: {$this->address}\n";
 	}
 }

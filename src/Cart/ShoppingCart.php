@@ -21,6 +21,11 @@ class ShoppingCart
 		]);
 	}
 
+    public function getItems()
+	{
+		return $this->items;
+	}
+
 	public function getTotal()
 	{
 		$total = 0;
@@ -47,8 +52,5 @@ class ShoppingCart
 		echo "\t\tTotal\t=\t" . $this->getTotal() . "\n\n";
 	}
 
-	public function getItems()
-	{
-		return $this->items;
-	}
+	
 }

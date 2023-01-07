@@ -5,26 +5,31 @@ namespace App\Order;
 use Exception;
 use App\Invoice\InvoiceStrategy;
 use App\Payments\PaymentStrategy;
-use App\Tax\TaxStrategy;
+//use App\Tax\TaxStrategy;
 
 class Order
-{
+{   
 	protected $name;
+    protected $address;
 	protected $email;
 	protected $items;
 	protected $total;
-	protected $totalWithTax;
+	//protected $totalWithTax;
 	protected $paymentMethod;
 	protected $invoiceGenerator;
-	protected $taxType;
-	protected $isTaxEnabled;
+	//protected $taxType;
+	//protected $isTaxEnabled;
 
-	public function __construct($name, $email, $cart)
+	public function __construct($customer, $cart)
 	{
-		$this->name = $name;
-		$this->email = $email;
+		//$this->name = $name;
+        //$this->address = $address;
+		//$this->email = $email;
+        $this->name= $customer->getName();
+        $this->address= $customer->getAddress();
+        $this->email= $customer->getEmail();
 		$this->items = $cart->getItems();
-		$this->isTaxEnabled = false;
+		//$this->isTaxEnabled = false;
 		$this->total = $cart->getTotal();
 	}
 
@@ -32,6 +37,11 @@ class Order
 	{
 		return $this->name;
 	}
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
 
 	public function getEmail()
 	{
@@ -45,53 +55,31 @@ class Order
 
 	public function getTotal()
 	{
-		if ($this->isTaxEnabled) {
+		/* if ($this->isTaxEnabled) {
 			if (empty($this->taxType)) {
 				throw new Exception('Invalid Tax Type configuration');
 			}
 
 			$this->totalWithTax = $this->taxType->computeTotalWithTax($this->total);
 			return $this->totalWithTax;
-		}
+		} */
 		return $this->total;
 	}
 
-	public function enableTax()
+	/* public function enableTax()
 	{
 		$this->isTaxEnabled = true;
-	}
+	} */
 
-	public function disableTax()
+	/* public function disableTax()
 	{
 		$this->isTaxEnabled = false;
-	}
+	} */
 
-	public function setTaxType(TaxStrategy $taxType)
+	/* public function setTaxType(TaxStrategy $taxType)
 	{
 		$this->taxType = $taxType;
-	}
-
-	public function setPaymentMethod(PaymentStrategy $method)
-	{
-		$this->paymentMethod = $method;
-	}
-
-	public function pay()
-	{
-		try {
-			if (empty($this->paymentMethod)) {
-				throw new Exception('Invalid payment method');
-			}
-	
-			$total = $this->total;
-			if ($this->isTaxEnabled) {
-				$total = $this->totalWithTax;
-			}
-			$this->paymentMethod->pay($total);
-		} catch (Exception $e) {
-			error_log($e->getMessage());
-		}
-	}
+	} */
 
 	public function setInvoiceGenerator(InvoiceStrategy $generator)
 	{
@@ -105,6 +93,28 @@ class Order
 				throw new Exception("Invoice generator is missing");
 			}
 			$this->invoiceGenerator->generate($this);
+		} catch (Exception $e) {
+			error_log($e->getMessage());
+		}
+	}
+
+	public function setPaymentMethod(PaymentStrategy $method)
+	{
+		$this->paymentMethod = $method;
+	}
+
+	public function payInvoice()
+	{
+		try {
+			if (empty($this->paymentMethod)) {
+				throw new Exception('Invalid payment method');
+			}
+	
+			$total = $this->total;
+			/* if ($this->isTaxEnabled) {
+				$total = $this->totalWithTax;
+			} */
+			$this->paymentMethod->pay($total);
 		} catch (Exception $e) {
 			error_log($e->getMessage());
 		}
